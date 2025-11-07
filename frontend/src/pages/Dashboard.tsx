@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import StatsCard from "@/components/StatsCard";
 import CourseCard from "@/components/CourseCard";
 import { BookOpen, TrendingUp, Award, Clock } from "lucide-react";
@@ -10,41 +11,17 @@ const Dashboard = () => {
     { title: "Learning Hours", value: "124", icon: Clock, color: "secondary" as const },
   ];
 
-  const enrolledCourses = [
-    {
-      id: 1,
-      title: "Complete Web Development Bootcamp",
-      instructor: "Sarah Johnson",
-      category: "Web Development",
-      duration: "12 hours",
-      students: 15234,
-      progress: 65,
-      thumbnail: "",
-      lessons: 48,
-    },
-    {
-      id: 2,
-      title: "Advanced React & TypeScript",
-      instructor: "Michael Chen",
-      category: "Programming",
-      duration: "8 hours",
-      students: 8456,
-      progress: 30,
-      thumbnail: "",
-      lessons: 32,
-    },
-    {
-      id: 3,
-      title: "UI/UX Design Masterclass",
-      instructor: "Emma Wilson",
-      category: "Design",
-      duration: "10 hours",
-      students: 12890,
-      progress: 85,
-      thumbnail: "",
-      lessons: 40,
-    },
-  ];
+  // State for courses fetched from backend
+  const [enrolledCourses, setEnrolledCourses] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/courses")
+      .then((res) => res.json())
+      .then((data) => setEnrolledCourses(data))
+      .catch((error) => {
+        console.error("Error fetching courses:", error);
+      });
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -70,7 +47,17 @@ const Dashboard = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {enrolledCourses.map((course) => (
-              <CourseCard key={course.id} {...course} />
+              <CourseCard
+                key={course.id}
+                id={course.id}
+                title={course.title}
+                instructor={course.instructor}
+                category={course.category}
+                duration={course.duration}
+                progress={course.progress ?? 0}
+                thumbnail={course.thumbnail || ""}
+                lessons={course.lessons ?? 0}
+              />
             ))}
           </div>
         </section>

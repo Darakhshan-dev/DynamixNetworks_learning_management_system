@@ -10,10 +10,10 @@ interface CourseCardProps {
   instructor: string;
   category: string;
   duration: string;
-  students: number;
   progress?: number;
   thumbnail: string;
   lessons: number;
+  // students?: number; // Uncomment ONLY if used and available
 }
 
 const CourseCard = ({
@@ -22,10 +22,10 @@ const CourseCard = ({
   instructor,
   category,
   duration,
-  students,
   progress,
   thumbnail,
   lessons,
+  // students, // Uncomment if actually available in backend/data
 }: CourseCardProps) => {
   return (
     <Link to={`/course/${id}`}>
@@ -39,28 +39,27 @@ const CourseCard = ({
             {category}
           </Badge>
         </div>
-        
         <div className="p-5">
           <h3 className="font-semibold text-lg mb-2 line-clamp-2 group-hover:text-primary transition-colors">
             {title}
           </h3>
           <p className="text-sm text-muted-foreground mb-4">{instructor}</p>
-          
           <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
             <div className="flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
               {duration}
             </div>
+            {/* Uncomment below if you add students column
             <div className="flex items-center gap-1">
               <Users className="h-3.5 w-3.5" />
-              {students.toLocaleString()}
+              {students} students
             </div>
+            */}
             <div className="flex items-center gap-1">
               <BookOpen className="h-3.5 w-3.5" />
               {lessons} lessons
             </div>
           </div>
-
           {progress !== undefined && (
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">

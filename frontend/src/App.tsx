@@ -13,6 +13,8 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import UsersList from './UsersList';
+import LessonsPage from './pages/LessonsPage';
+
 
 const queryClient = new QueryClient();
 
@@ -33,7 +35,7 @@ const App = () => (
           <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/users" element={<UsersList />} />
-
+          <Route path="/lessons" element={<LessonsPage />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
