@@ -11,15 +11,24 @@ const Dashboard = () => {
     { title: "Learning Hours", value: "124", icon: Clock, color: "secondary" as const },
   ];
 
-  // State for courses fetched from backend
   const [enrolledCourses, setEnrolledCourses] = useState([]);
+  const [recentLessons, setRecentLessons] = useState([]);
 
   useEffect(() => {
     fetch("/api/courses")
       .then((res) => res.json())
-      .then((data) => setEnrolledCourses(data))
+      .then(setEnrolledCourses)
       .catch((error) => {
         console.error("Error fetching courses:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/lessons") // Make sure backend returns lessons with video_url
+      .then((res) => res.json())
+      .then(setRecentLessons)
+      .catch((error) => {
+        console.error("Error fetching lessons:", error);
       });
   }, []);
 
@@ -28,9 +37,7 @@ const Dashboard = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Welcome back, Student! 👋</h1>
-          <p className="text-muted-foreground">
-            Continue your learning journey and reach your goals
-          </p>
+          <p className="text-muted-foreground">Continue your learning journey and reach your goals</p>
         </div>
 
         {/* Stats Grid */}
@@ -62,6 +69,29 @@ const Dashboard = () => {
           </div>
         </section>
 
+        {/* Recent Lessons Section */}
+        <section className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Recent Lessons</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+           {recentLessons.map((lesson) => {
+  console.log("Student lesson video_url:", lesson.video_url); // Add this
+
+  return (
+    <div key={lesson.id} className="p-4 border rounded bg-card">
+      <h3 className="mb-2 font-semibold">{lesson.title}</h3>
+      <video
+        src={lesson.video_url}
+        controls
+        width="100%"
+        style={{ maxWidth: "500px" }}
+      />
+    </div>
+  );
+})}
+
+          </div>
+        </section>
+
         {/* Recent Activity */}
         <section>
           <h2 className="text-2xl font-bold mb-6">Recent Activity</h2>
@@ -88,6 +118,7 @@ const Dashboard = () => {
             ))}
           </div>
         </section>
+
       </div>
     </div>
   );

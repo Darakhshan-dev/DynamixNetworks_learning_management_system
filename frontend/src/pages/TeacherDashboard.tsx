@@ -7,6 +7,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { BookOpen, GraduationCap, FileQuestion, Plus, Trash2, Edit, Layers, Video } from "lucide-react";
 import { toast } from "sonner";
+import VideoUploadForm from "@/components/VideoUploadForm";
+
 
 interface Course {
   id: string;
@@ -313,6 +315,7 @@ const TeacherDashboard = () => {
                         onChange={e => setNewLesson({ ...newLesson, video_url: e.target.value })}
                         placeholder="Video URL"
                       />
+                      <VideoUploadForm onUploadSuccess={url => setNewLesson(prev => ({ ...prev, video_url: url }))} />
                       <Button onClick={handleAddLesson} className="w-full">
                         Add Lesson
                       </Button>

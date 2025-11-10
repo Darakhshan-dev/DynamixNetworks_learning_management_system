@@ -24,17 +24,27 @@ const Profile = () => {
   const [profile, setProfile] = useState(DEFAULT_PROFILE);
 
   useEffect(() => {
-    // Fetch profile data from backend
-    fetch("/api/profile")
-      .then((res) => res.json())
+    // Add JWT Authorization header!
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:3001/api/profile", {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load profile");
+        return res.json();
+      })
       .then((data) => setProfile({ ...DEFAULT_PROFILE, ...data }))
       .catch(() => toast.error("Failed to load profile!"));
   }, []);
 
   const handleSaveProfile = () => {
-    fetch("/api/profile", {
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:3001/api/profile", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify(profile),
     })
       .then((res) => {
@@ -44,7 +54,6 @@ const Profile = () => {
       .catch(() => toast.error("Failed to update profile."));
   };
 
-  // Achievements can be dynamic from backend, fallback to UI sample
   const achievements =
     profile.achievements.length > 0
       ? profile.achievements
@@ -58,7 +67,6 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">My Profile</h1>
-
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Profile Info */}
           <div className="lg:col-span-2 space-y-6">
@@ -115,7 +123,6 @@ const Profile = () => {
                 </Button>
               </div>
             </Card>
-
             <Card className="p-6">
               <h2 className="text-xl font-semibold mb-6">Learning Goals</h2>
               <div className="space-y-4">
@@ -146,7 +153,6 @@ const Profile = () => {
               </div>
             </Card>
           </div>
-
           {/* Sidebar */}
           <div className="space-y-6">
             <Card className="p-6 text-center">
@@ -181,7 +187,6 @@ const Profile = () => {
                 </div>
               </div>
             </Card>
-
             <Card className="p-6">
               <h3 className="font-semibold mb-4">Achievements</h3>
               <div className="space-y-3">

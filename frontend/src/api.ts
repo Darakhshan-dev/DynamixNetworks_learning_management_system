@@ -2,6 +2,19 @@ import { supabase } from './supabaseClient';
 
 const backendUrl = "http://localhost:3001";
 
+
+export async function fetchProfile() {
+  const token = localStorage.getItem("token");
+  const res = await fetch(`${backendUrl}/api/profile`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!res.ok) throw new Error("Failed to load profile");
+  return res.json();
+}
+
+
 // Fetch all users from Supabase
 export async function fetchUsers() {
   const { data, error } = await supabase.from('users').select('*');
@@ -29,13 +42,13 @@ export async function registerUser(userData: {
 }
 
 
-// Login user via Express backend (with full backend URL)
-export async function loginUser(credentials: { email: string; password: string }) {
-  const res = await fetch(`${backendUrl}/api/login`, {   // Use backendUrl here
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+export async function loginUser(credentials: { email: string; password: string; role: string }) {
+  const res = await fetch(`${backendUrl}/api/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
-  if (!res.ok) throw new Error('Login failed');
-  return res.json(); // Adjust if backend returns text
+  if (!res.ok) throw new Error("Login failed");
+  return res.json(); // Backend must return { token, user }
 }
+

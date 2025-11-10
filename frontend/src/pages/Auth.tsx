@@ -27,14 +27,22 @@ const [loginForm, setLoginForm] = useState({
 });
 
 
- const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setIsLoading(true);
 
   try {
-    const user = await loginUser(loginForm);
+    const response = await loginUser({
+      email: loginForm.email,
+      password: loginForm.password,
+      role,
+    });
+
+    // Save JWT token from backend
+    localStorage.setItem("token", response.token);
+    localStorage.setItem("userRole", role);
+
     setIsLoading(false);
-    localStorage.setItem("userRole", role); // Or use role from API response
     toast.success("Welcome back!");
     navigate(role === "teacher" ? "/teacher/dashboard" : "/dashboard");
   } catch (error) {
@@ -42,6 +50,8 @@ const [loginForm, setLoginForm] = useState({
     toast.error("Login failed!");
   }
 };
+
+
 
  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
